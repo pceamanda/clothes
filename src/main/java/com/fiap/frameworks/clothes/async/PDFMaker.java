@@ -1,7 +1,8 @@
-package com.fiap.frameworks.clothes.utils;
+package com.fiap.frameworks.clothes.async;
 
 import com.fiap.frameworks.clothes.entity.SaleEntity;
 import com.fiap.frameworks.clothes.entity.SaleProductEntity;
+import com.fiap.frameworks.clothes.utils.Utils;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
@@ -163,9 +164,7 @@ public class PDFMaker {
 
                     // HASH
                     document.add(new Paragraph(" "));
-                    String chv = sale.getId() + sale.getCustomer().getId() + String.valueOf(sale.getFullPrice());
-                    String hsh = Utils.generateHash(chv);
-                    document.add(new Paragraph(Utils.formatHash(hsh)));
+                    document.add(new Paragraph(sale.getHash()));
 
                     // dados da empresa
                     document.add(new Paragraph(" "));

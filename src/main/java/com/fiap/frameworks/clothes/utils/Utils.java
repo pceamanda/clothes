@@ -13,8 +13,7 @@ public class Utils {
             MessageDigest m = MessageDigest.getInstance("MD5");
             m.update(s.getBytes(), 0, s.length());
             byte[] digest = m.digest();
-            String hexaDecimal = new BigInteger(1, digest).toString(16);
-            return hexaDecimal;
+            return new BigInteger(1, digest).toString(16);
         }catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
             return e.getMessage();
