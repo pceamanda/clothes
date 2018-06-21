@@ -125,7 +125,7 @@ public class PDFMaker {
                 PdfPCell cell2 = new PdfPCell(new Phrase(" ", tblheadfont));
                 tbhi.addCell(cell2);
 
-                PdfPCell cell3 = new PdfPCell(new Phrase(String.format("%.2f", item.getPrice()), tblheadfont));
+                PdfPCell cell3 = new PdfPCell(new Phrase(String.format("%.2f", item.getProductUnitPrice()), tblheadfont));
                 tbhi.addCell(cell3);
 
                 PdfPCell cell4 = new PdfPCell(new Phrase(" ", tblheadfont));
@@ -134,7 +134,7 @@ public class PDFMaker {
                 PdfPCell cell5 = new PdfPCell(new Phrase(" ", tblheadfont));
                 tbhi.addCell(cell5);
 
-                PdfPCell cell6 = new PdfPCell(new Phrase(" ", tblheadfont));
+                PdfPCell cell6 = new PdfPCell(new Phrase(String.format("%.2f", item.getPrice()), tblheadfont));
                 tbhi.addCell(cell6);
 
                 tbhi.setWidthPercentage(100);
