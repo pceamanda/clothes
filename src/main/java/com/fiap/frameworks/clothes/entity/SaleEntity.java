@@ -1,11 +1,15 @@
 package com.fiap.frameworks.clothes.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
+@Table(name = "SALE")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class SaleEntity {
 
     @Id
@@ -13,10 +17,10 @@ public class SaleEntity {
     @Column(name = "SALE_ID")
     private Long id;
 
-    @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL)
-    private List<SaleProductEntity> saleproducts;
+    @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<SaleProductEntity> saleProducts;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "CUSTOMER_ID")
     private CustomerEntity customer;
 
@@ -40,12 +44,12 @@ public class SaleEntity {
         this.id = id;
     }
 
-    public List<SaleProductEntity> getSaleproducts() {
-        return saleproducts;
+    public List<SaleProductEntity> getSaleProducts() {
+        return saleProducts;
     }
 
-    public void setSaleproducts(List<SaleProductEntity> saleproducts) {
-        this.saleproducts = saleproducts;
+    public void setSaleProducts(List<SaleProductEntity> saleProducts) {
+        this.saleProducts = saleProducts;
     }
 
     public CustomerEntity getCustomer() {

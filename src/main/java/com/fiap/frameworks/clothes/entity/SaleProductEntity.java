@@ -1,10 +1,13 @@
 package com.fiap.frameworks.clothes.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 
 @Entity
 @Table(name = "SALE_PRODUCT")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class SaleProductEntity {
 
     @Id
@@ -12,7 +15,7 @@ public class SaleProductEntity {
     @Column(name = "SALE_PRODUCT_ID")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "PRODUCT_ID")
     private ProductEntity product;
 

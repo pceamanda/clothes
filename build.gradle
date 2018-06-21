@@ -28,8 +28,15 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-activemq')
 	compile('org.springframework.boot:spring-boot-starter-data-jpa')
 	compile('org.springframework.boot:spring-boot-starter-web')
+
 	compile('com.itextpdf:itextpdf:5.5.13')
-    runtime('mysql:mysql-connector-java')
+
+	compile('javax.xml.bind:jaxb-api:2.3.0')
+
+	runtime (group: 'mysql', name: 'mysql-connector-java', version: '8.0.11')
+
+	compile(group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.8.0')
+	compile(group: 'io.springfox', name: 'springfox-swagger2', version: '2.8.0')
 
     testCompile('org.springframework.boot:spring-boot-starter-test')
 }
