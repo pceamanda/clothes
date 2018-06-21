@@ -24,7 +24,7 @@ public class PDFMaker {
 
         try {
             String fileName = "src/test/resources/cupons/invoice_" + sale.getId() + ".pdf";
-            PdfWriter pdfWriter = PdfWriter.getInstance(document, new FileOutputStream(fileName));
+            PdfWriter.getInstance(document, new FileOutputStream(fileName));
             document.open();
 
             // adicionando um paragrafo no documento
