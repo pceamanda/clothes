@@ -54,7 +54,7 @@ public class PDFMaker {
             table.addCell(cell);
             cell = new PdfPCell(new Phrase("CCF: 010333"));
             table.addCell(cell);
-            cell = new PdfPCell(new Phrase("COO: " + sale.getId()));
+            cell = new PdfPCell(new Phrase("COO: " + sale.getCoo()));
             cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
             table.addCell(cell);
             table.setWidthPercentage(100);
