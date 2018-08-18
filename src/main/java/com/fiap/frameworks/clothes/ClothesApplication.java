@@ -38,6 +38,7 @@ public class ClothesApplication {
 	@Bean
 	public JmsListenerContainerFactory<?> myFactory(ConnectionFactory connectionFactory, DefaultJmsListenerContainerFactoryConfigurer configurer) {
 		DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
+		factory.setConcurrency("100-1000");
 		configurer.configure(factory, connectionFactory);
 		return factory;
 	}
