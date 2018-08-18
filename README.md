@@ -1,6 +1,7 @@
 #Dentro do Arquivo application.properties, existe as configurações do MYSQL:
 
 #Sera preciso criar a database:
+
 CREATE SCHEMA `sale` ;
 
 #Logo apos criar um database existe as conexões:
