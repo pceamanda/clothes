@@ -9,12 +9,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@ActiveProfiles("it-test")
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class TestRepositorySale {
@@ -32,7 +34,7 @@ public class TestRepositorySale {
         s.setDate(LocalDateTime.now());
 
         saleRepository.save(s);
-        List<SaleEntity> products = (List<SaleEntity>) saleRepository.findAll();
+        List<SaleEntity> products = saleRepository.findAll();
         Assert.assertFalse(products.isEmpty());
         Assert.assertEquals(1, products.size());
     }
