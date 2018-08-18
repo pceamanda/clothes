@@ -4,6 +4,8 @@ import com.fiap.frameworks.clothes.entity.SaleEntity;
 import com.fiap.frameworks.clothes.exception.APIException;
 import com.fiap.frameworks.clothes.request.OrderRequest;
 import com.fiap.frameworks.clothes.response.SaleResponse;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,11 +42,22 @@ public class OrderService {
             sales.addAll(saleService.findAll());
         }
 
+        if(sales.isEmpty()){
+            throw new APIException(HttpStatus.NO_CONTENT);
+        }
+
         try {
-            sales.stream().parallel().forEach(sale -> {
-                LOGGER.info("send invoice to queue " + sale.getId());
-                jmsTemplate.convertAndSend("invoice", new SaleResponse(sale));
-            });
+            LOGGER.info("send orders to queue");
+            List<SaleResponse> orders = new ArrayList<>();
+            sales.stream().parallel().forEach(sale ->
+                orders.add(new SaleResponse(sale))
+            );
+
+            GsonBuilder builder = new GsonBuilder();
+            Gson gson = builder.create();
+
+            jmsTemplate.convertAndSend("orders", gson.toJson(orders));
+
         } catch (Exception e) {
             throw new APIException(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
