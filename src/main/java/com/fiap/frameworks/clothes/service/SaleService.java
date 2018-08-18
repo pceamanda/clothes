@@ -12,6 +12,8 @@ import com.fiap.frameworks.clothes.request.OrderRequest;
 import com.fiap.frameworks.clothes.request.ProductOrderRequest;
 import com.fiap.frameworks.clothes.response.SaleResponse;
 import com.fiap.frameworks.clothes.utils.Utils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.jms.core.JmsTemplate;
@@ -24,6 +26,8 @@ import java.util.List;
 
 @Service
 public class SaleService {
+
+    private static final Logger LOGGER = LogManager.getLogger(SaleService.class);
 
     @Autowired
     private SaleRepository repository;
@@ -97,9 +101,10 @@ public class SaleService {
         }
 
         try {
-            sales.forEach(sale ->
-                jmsTemplate.convertAndSend("invoice", new SaleResponse(sale))
-            );
+            sales.stream().parallel().forEach(sale -> {
+                LOGGER.info("send invoice to queue " + sale.getId());
+                jmsTemplate.convertAndSend("invoice", new SaleResponse(sale));
+            });
         } catch (Exception e) {
             throw new APIException(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
