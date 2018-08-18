@@ -10,24 +10,20 @@ import com.fiap.frameworks.clothes.repository.ProductRepository;
 import com.fiap.frameworks.clothes.repository.SaleRepository;
 import com.fiap.frameworks.clothes.request.OrderRequest;
 import com.fiap.frameworks.clothes.request.ProductOrderRequest;
-import com.fiap.frameworks.clothes.response.SaleResponse;
 import com.fiap.frameworks.clothes.utils.Utils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
-import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class SaleService {
-
-    private static final Logger LOGGER = LogManager.getLogger(SaleService.class);
 
     @Autowired
     private SaleRepository repository;
@@ -38,8 +34,14 @@ public class SaleService {
     @Autowired
     private CustomerRepository customerRepository;
 
-    @Autowired
-    private JmsTemplate jmsTemplate;
+    Optional<SaleEntity> findById(Long id) {
+        return repository.findById(id);
+    }
+
+    @Cacheable(cacheNames = "orders")
+    public List<SaleEntity> findAll() {
+        return repository.findAll();
+    }
 
     public void sale(OrderRequest order) throws APIException {
 
@@ -87,33 +89,6 @@ public class SaleService {
         savedSale.setSaleProducts(saleProducts);
         repository.save(sale);
 
-    }
-
-    public void generateInvoice(final Long saleId) throws APIException {
-
-        List<SaleEntity> sales = new ArrayList<>();
-
-        if(saleId != null){
-            sales.add(repository.findById(saleId).orElseThrow(
-                    () -> new APIException(HttpStatus.BAD_REQUEST)));
-        } else {
-            sales.addAll(repository.findAll());
-        }
-
-        try {
-            sales.stream().parallel().forEach(sale -> {
-                LOGGER.info("send invoice to queue " + sale.getId());
-                jmsTemplate.convertAndSend("invoice", new SaleResponse(sale));
-            });
-        } catch (Exception e) {
-            throw new APIException(e, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    public List<SaleResponse> findAll() {
-        List<SaleResponse> response = new ArrayList<>();
-        repository.findAll().forEach(sale -> response.add(new SaleResponse(sale)));
-        return response;
     }
 
 }
