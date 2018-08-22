@@ -1,3 +1,5 @@
+#Aplicação feita com gradle, pelo intellij
+
 #Dentro do Arquivo application.properties, existe as configurações do MYSQL:
 
 #Necessário instalação de um servidor mysql local
