@@ -4,8 +4,6 @@ import com.fiap.frameworks.clothes.entity.SaleEntity;
 import com.fiap.frameworks.clothes.exception.APIException;
 import com.fiap.frameworks.clothes.request.OrderRequest;
 import com.fiap.frameworks.clothes.response.SaleResponse;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +19,15 @@ public class OrderService {
 
     private static final Logger LOGGER = LogManager.getLogger(SaleService.class);
 
-    @Autowired
-    private SaleService saleService;
+    private final SaleService saleService;
+
+    private final JmsTemplate jmsTemplate;
 
     @Autowired
-    private JmsTemplate jmsTemplate;
+    public OrderService(SaleService saleService, JmsTemplate jmsTemplate) {
+        this.saleService = saleService;
+        this.jmsTemplate = jmsTemplate;
+    }
 
     public void sale(OrderRequest order) throws APIException {
         saleService.sale(order);
@@ -46,21 +48,11 @@ public class OrderService {
             throw new APIException(HttpStatus.NO_CONTENT);
         }
 
-        try {
-            LOGGER.info("send orders to queue");
-            List<SaleResponse> orders = new ArrayList<>();
-            sales.stream().parallel().forEach(sale ->
-                orders.add(new SaleResponse(sale))
-            );
-
-            GsonBuilder builder = new GsonBuilder();
-            Gson gson = builder.create();
-
-            jmsTemplate.convertAndSend("orders", gson.toJson(orders));
-
-        } catch (Exception e) {
-            throw new APIException(e, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        LOGGER.info("send orders to queue");
+        sales.stream().parallel().forEach(sale -> {
+            LOGGER.info("send to queue to generate pdf " + sale.getId());
+            jmsTemplate.convertAndSend("invoice", new SaleResponse(sale));
+        });
     }
 
     public List<SaleResponse> findAll() {
