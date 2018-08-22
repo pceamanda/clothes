@@ -16,7 +16,7 @@ spring.datasource.password=root
 
 #Devera trocar o username e o password se for preciso de acordo com sua instalação de servidor mysql local.
 
-#Aplicação sobe na porta 8083
+#Aplicação sobe na porta 8083, através do método main da classe ClothesApplication
 
 http://localhost:8083/sale/
 
